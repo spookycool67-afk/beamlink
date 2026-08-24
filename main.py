@@ -8,7 +8,7 @@ import datetime
 TOKEN = os.getenv("TOKEN")
 LOG_CHANNEL_ID = 1541121005601161297
 
-bot = commands.Bot(command_prefix="/", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 async def log(interaction, action, guild_id, details):
     channel = bot.get_channel(LOG_CHANNEL_ID)
@@ -31,7 +31,11 @@ async def log(interaction, action, guild_id, details):
 @bot.event
 async def on_ready():
     print(f"Bot {bot.user} ready")
-    await bot.tree.sync()
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} commands")
+    except Exception as e:
+        print(f"Sync error: {e}")
 
 # ========== /commands ==========
 @bot.tree.command(name="commands", description="Show all raid commands with details")
@@ -75,6 +79,11 @@ async def list_commands(interaction: discord.Interaction):
     embed.add_field(
         name="/flex",
         value="Show 444 server branding – icon, banner, description.",
+        inline=False
+    )
+    embed.add_field(
+        name="!flex",
+        value="Same as /flex but as a prefix command.",
         inline=False
     )
     embed.add_field(
@@ -404,6 +413,20 @@ async def flex(interaction: discord.Interaction):
     
     await interaction.response.send_message(embed=embed)
 
+# ========== !flex ==========
+@bot.command(name="flex")
+async def flex_prefix(ctx):
+    embed = discord.Embed(
+        title="🔥 444 OBLIVION",
+        description="**Where chaos meets order. 444 reigns.**\n\n⚔️ Raid Ready\n🔥 Destructive Power\n💀 444 Legacy\n\n**Server Status:** ACTIVE\n**Brand:** 444 OBLIVION\n**Theme:** Chaos & Order",
+        color=0xff0000,
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1541216461480271912/1541218341811781722/IMG_4545.png")
+    embed.set_image(url="https://cdn.discordapp.com/attachments/1541216461480271912/1541218341811781722/IMG_4545.png")
+    embed.set_footer(text="444 OBLIVION • Built by the 444s")
+    await ctx.send(embed=embed)
+
 # ========== !cmds ==========
 @bot.command(name="cmds")
 async def cmds(ctx):
@@ -445,6 +468,11 @@ async def cmds(ctx):
     embed.add_field(
         name="/flex",
         value="Shows 444 server branding with icon, banner, and description.",
+        inline=False
+    )
+    embed.add_field(
+        name="!flex",
+        value="Same as /flex but as a prefix command.",
         inline=False
     )
     embed.set_footer(text="⚠️ DESTRUCTIVE COMMANDS – USE WITH CAUTION")
