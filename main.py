@@ -37,6 +37,15 @@ async def on_ready():
     except Exception as e:
         print(f"Sync error: {e}")
 
+# ========== !sync ==========
+@bot.command()
+async def sync(ctx):
+    try:
+        await bot.tree.sync()
+        await ctx.send("✅ Commands synced globally! Try /flex now.")
+    except Exception as e:
+        await ctx.send(f"❌ Sync failed: {e}")
+
 # ========== /commands ==========
 @bot.tree.command(name="commands", description="Show all raid commands with details")
 async def list_commands(interaction: discord.Interaction):
